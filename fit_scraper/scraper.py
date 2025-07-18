@@ -15,15 +15,14 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
-from fit_common.core.utils import resolve_path
+from fit_common.core.utils import get_version, resolve_path
 from fit_common.gui.error import Error
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
 from fit_configurations.utils import show_configuration_dialog
+from fit_scraper.lang import load_scraper_translations
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtGui import QMovie
-
-from fit_scraper.lang import load_scraper_translations
 
 
 class Scraper(QtWidgets.QMainWindow):
@@ -189,6 +188,7 @@ class Scraper(QtWidgets.QMainWindow):
             return False
 
     def execute_start_tasks_flow(self):
+        self.__acquisition_status = AcquisitionStatus.STARTED
         self._reset_acquisition_indicators(True)
         self.__acquisition.load_tasks()
         self.__init_execution_overlay()
@@ -197,6 +197,7 @@ class Scraper(QtWidgets.QMainWindow):
         loop = QtCore.QEventLoop()
         QtCore.QTimer.singleShot(1000, loop.quit)
         loop.exec()
+        self.__acquisition.log_start_message()
         self.__acquisition.run_start_tasks()
 
     def on_start_tasks_finished(self):
@@ -209,27 +210,33 @@ class Scraper(QtWidgets.QMainWindow):
         self._reset_acquisition_indicators(False)
 
     def execute_stop_tasks_flow(self):
+        self.__acquisition_status = AcquisitionStatus.STOPPED
         self._reset_acquisition_indicators(True)
         self.__tasks_info.show()
         loop = QtCore.QEventLoop()
         QtCore.QTimer.singleShot(1000, loop.quit)
         loop.exec()
+        self.__acquisition.log_stop_message()
         self.__acquisition.run_stop_tasks()
 
     def on_stop_tasks_finished(self):
+        loop = QtCore.QEventLoop()
+        QtCore.QTimer.singleShot(2000, loop.quit)
+        loop.exec()
+        self._reset_acquisition_indicators(True)
         self.execute_post_acquisition_tasks_flow()
-        self._reset_acquisition_indicators(False)
 
     def execute_post_acquisition_tasks_flow(self):
-        self._reset_acquisition_indicators(True)
         self.__acquisition.start_post_acquisition()
 
     def on_post_acquisition_finished(self):
-        QtCore.QTimer.singleShot(1000, self.__tasks_info.close)
+        self.__acquisition_status = AcquisitionStatus.FINISHED
+        QtCore.QTimer.singleShot(3000, self.__tasks_info.close)
         self.__acquisition.log_end_message()
         self.__acquisition.set_completed_progress_bar()
         self.__acquisition.unload_tasks()
         self._reset_acquisition_indicators(False)
+        self.finish_acquisition()
 
     def on_resize(self, event):
         self.__spinner_overlay.setGeometry(self.rect())
@@ -259,6 +266,9 @@ class Scraper(QtWidgets.QMainWindow):
         self.__acquisition.status_bar_visible = visible
         self.__acquisition.reset_progress_bar
         self.__acquisition.reset_status_bar
+
+    def _get_version(self):
+        return get_version()
 
     def __init_execution_overlay(self):
 
