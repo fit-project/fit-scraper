@@ -1,0 +1,8 @@
+{
+    "NO_CASE_SELECTED_TITLE" : "Nessun caso selezionato",
+    "NO_CASE_SELECTED_MESSAGE" : "È necessario compilare i dati del caso per procedere.",
+    "CREATE_DIRECTORY_ERROR_TITLE": "Errore creazione directory",
+    "CREATE_ACQUISITION_DIRECTORY_ERROR_MESSAGE": "Si è verificato un errore durante la creazione della directory di acquisizione.\n\nDettagli dell’errore disponibili di seguito.\nNon è possibile iniziare l’acquisizione finché il problema non viene risolto.",
+    "CREATE_ACQUISITION_SUBDIRECTORY_ERROR_MESSAGE": "Errore durante la creazione della sottocartella '{}'.\n\nDettagli dell’errore disponibili di seguito.\nNon è possibile iniziare l’acquisizione finché il problema non viene risolto.",
+    "ACQUISITION_DIRECTORY_DOES_NOT_EXIST": "La directory di acquisizione non esiste."
+}  
