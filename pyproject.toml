@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "fit-scaper"
+name = "fit-scraper"
 version = "0.1.0"
 description = "FIT Scraper Module"
 authors = ["FIT Project"]
