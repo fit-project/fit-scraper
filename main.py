@@ -11,7 +11,7 @@ import logging
 import os
 import sys
 
-from fit_acquisition.class_names import *
+from fit_acquisition.class_names import class_names
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtWidgets import QApplication
 
@@ -24,16 +24,19 @@ class TestScraper(Scraper):
         packages = []
         super().__init__(logger, "web", packages, wizard)
 
-        self.acquisition.start_tasks = [SCREENRECORDER, PACKETCAPTURE]
+        self.acquisition.start_tasks = [
+            class_names.SCREENRECORDER,
+            class_names.PACKETCAPTURE,
+        ]
         self.acquisition.stop_tasks = [
-            WHOIS,
-            NSLOOKUP,
-            HEADERS,
-            SSLKEYLOG,
-            SSLCERTIFICATE,
-            TRACEROUTE,
-            SCREENRECORDER,
-            PACKETCAPTURE,
+            class_names.WHOIS,
+            class_names.NSLOOKUP,
+            class_names.HEADERS,
+            class_names.SSLKEYLOG,
+            class_names.SSLCERTIFICATE,
+            class_names.TRACEROUTE,
+            class_names.SCREENRECORDER,
+            class_names.PACKETCAPTURE,
         ]
         self.__init_execution_overlay()
 

@@ -95,6 +95,10 @@ class Scraper(QtWidgets.QMainWindow):
     def case_info(self):
         return self.__case_info
 
+    @property
+    def acquisition_directory(self):
+        return self.__acquisition_directory
+
     def create_acquisition_directory(self) -> bool:
         try:
             # Folder Cases
@@ -119,11 +123,11 @@ class Scraper(QtWidgets.QMainWindow):
                     acquisition_type_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
                 )
 
-            self.acquisition_directory = os.path.join(
+            self.__acquisition_directory = os.path.join(
                 acquisition_type_folder, "acquisition_1"
             )
 
-            if os.path.isdir(self.acquisition_directory):
+            if os.path.isdir(self.__acquisition_directory):
                 acquisition_directories = [
                     d
                     for d in os.listdir(acquisition_type_folder)
@@ -145,11 +149,11 @@ class Scraper(QtWidgets.QMainWindow):
                     default=0,
                 )
 
-                self.acquisition_directory = os.path.join(
+                self.__acquisition_directory = os.path.join(
                     acquisition_type_folder, f"acquisition_{index + 1}"
                 )
 
-            os.makedirs(self.acquisition_directory, exist_ok=True)
+            os.makedirs(self.__acquisition_directory, exist_ok=True)
             return True
 
         except Exception as e:
@@ -160,17 +164,17 @@ class Scraper(QtWidgets.QMainWindow):
                 str(e),
             )
             error.exec()
-            self.acquisition_directory = None
+            self.__acquisition_directory = None
             return False
 
     def create_acquisition_subdirectory(self, sub_path: str) -> bool:
         try:
-            if not self.acquisition_directory:
+            if not self.__acquisition_directory:
                 raise ValueError(
                     self.scraper_translations["ACQUISITION_DIRECTORY_DOES_NOT_EXIST"]
                 )
 
-            full_path = os.path.join(self.acquisition_directory, sub_path)
+            full_path = os.path.join(self.__acquisition_directory, sub_path)
             os.makedirs(full_path, exist_ok=True)
             os.chmod(full_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
             return True
