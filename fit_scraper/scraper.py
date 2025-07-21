@@ -15,14 +15,15 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
-from fit_common.core.utils import get_version, resolve_path
+from fit_common.core.utils import get_version
 from fit_common.gui.error import Error
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
 from fit_configurations.utils import show_configuration_dialog
-from fit_scraper.lang import load_scraper_translations
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtGui import QMovie
+
+from fit_scraper.lang import load_scraper_translations
 
 
 class Scraper(QtWidgets.QMainWindow):
@@ -206,11 +207,11 @@ class Scraper(QtWidgets.QMainWindow):
 
     def on_start_tasks_finished(self):
         loop = QtCore.QEventLoop()
+        self.__acquisition.set_completed_progress_bar()
         QtCore.QTimer.singleShot(2000, loop.quit)
         loop.exec()
         self.__movie_spinner.stop()
         self.__spinner_overlay.hide()
-        self.__acquisition.progress_bar.setValue(100)
         self._reset_acquisition_indicators(False)
 
     def execute_stop_tasks_flow(self):
@@ -224,6 +225,7 @@ class Scraper(QtWidgets.QMainWindow):
         self.__acquisition.run_stop_tasks()
 
     def on_stop_tasks_finished(self):
+        self.__acquisition.set_completed_progress_bar()
         loop = QtCore.QEventLoop()
         QtCore.QTimer.singleShot(2000, loop.quit)
         loop.exec()
@@ -235,6 +237,7 @@ class Scraper(QtWidgets.QMainWindow):
 
     def on_post_acquisition_finished(self):
         self.__acquisition_status = AcquisitionStatus.FINISHED
+        self.__acquisition.set_completed_progress_bar()
         QtCore.QTimer.singleShot(3000, self.__tasks_info.close)
         self.__acquisition.log_end_message()
         self.__acquisition.set_completed_progress_bar()
@@ -294,17 +297,35 @@ class Scraper(QtWidgets.QMainWindow):
         self.__spinner_overlay.setGeometry(self.rect())
         self.__spinner_overlay.hide()
 
-        self.__movie_spinner = QMovie(resolve_path("spinner.gif"))
+        self.__movie_spinner = QMovie(":/images/images/spinner.gif")
         self.__spinner_overlay.setMovie(self.__movie_spinner)
 
+    def __can_close(self) -> bool:
+        if self.acquisition_status in (
+            AcquisitionStatus.UNSTARTED,
+            AcquisitionStatus.FINISHED,
+        ):
+            return True
+
+        Error(
+            QtWidgets.QMessageBox.Icon.Warning,
+            self.scraper_translations["ACQUISITION_IS_RUNNING"],
+            self.scraper_translations["WAR_ACQUISITION_IS_RUNNING"],
+            "",
+        ).exec()
+        return False
+
     def __back_to_wizard(self):
-        self.deleteLater()
-        self.__wizard.reload_case_info()
-        self.__wizard.show()
+        if self.__can_close():
+            self.deleteLater()
+            self.__wizard.reload_case_info()
+            self.__wizard.show()
 
     def closeEvent(self, event):
         if self.__wizard is not None:
             event.ignore()
             self.__back_to_wizard()
-        else:
+        elif self.__can_close():
             event.accept()
+        else:
+            event.ignore()
