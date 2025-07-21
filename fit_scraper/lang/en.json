@@ -4,7 +4,5 @@
     "CREATE_DIRECTORY_ERROR_TITLE": "Directory Creation Error",
     "CREATE_ACQUISITION_DIRECTORY_ERROR_MESSAGE": "An error occurred while creating the acquisition directory.\n\nError details are shown below.\nIt is not possible to start the acquisition until the issue is resolved.",
     "CREATE_ACQUISITION_SUBDIRECTORY_ERROR_MESSAGE": "Error while creating subdirectory '{}'.\n\nError details are shown below.\nIt is not possible to start the acquisition until the issue is resolved.",
-    "ACQUISITION_DIRECTORY_DOES_NOT_EXIST": "The acquisition directory does not exist.",
-    "ACQUISITION_IS_RUNNING": "Acquisition is running",
-    "WAR_ACQUISITION_IS_RUNNING": "You can't close the windows while the acquisition is running"
+    "ACQUISITION_DIRECTORY_DOES_NOT_EXIST": "The acquisition directory does not exist."
 }

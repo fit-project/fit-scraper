@@ -352,7 +352,7 @@ wmi = ["wmi (>=1.5.1)"]
 
 [[package]]
 name = "fit-acquisition"
-version = "1.0.12"
+version = "1.0.10"
 description = "Utilities and base classes for content acquisition, shared across FIT scraper modules."
 optional = false
 python-versions = ">=3.9,<3.13"
@@ -379,11 +379,11 @@ xhtml2pdf = "^0.2.17"
 type = "git"
 url = "https://github.com/fit-project/fit-acquisition.git"
 reference = "main"
-resolved_reference = "10ed934ce06b6fed54789dd9ace11c37f977c450"
+resolved_reference = "0c28da42e6834efcd02554e6ec8d2de2fd0146f5"
 
 [[package]]
 name = "fit-assets"
-version = "0.1.15"
+version = "0.1.14"
 description = "Assets (icons, images, resources) for the FIT project"
 optional = false
 python-versions = ">=3.9,<3.13"
@@ -397,7 +397,7 @@ PySide6 = "6.9.0"
 type = "git"
 url = "https://github.com/fit-project/fit-assets.git"
 reference = "main"
-resolved_reference = "7401955a08b66164f49342f9b53a54389c50b1c3"
+resolved_reference = "ddba187a2d96d7bfbc671db78db01750ce31857e"
 
 [[package]]
 name = "fit-cases"

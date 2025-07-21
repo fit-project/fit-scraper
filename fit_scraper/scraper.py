@@ -15,7 +15,7 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
-from fit_common.core.utils import get_version
+from fit_common.core.utils import get_version, resolve_path
 from fit_common.gui.error import Error
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
@@ -294,35 +294,17 @@ class Scraper(QtWidgets.QMainWindow):
         self.__spinner_overlay.setGeometry(self.rect())
         self.__spinner_overlay.hide()
 
-        self.__movie_spinner = QMovie(":/images/images/spinner.gif")
+        self.__movie_spinner = QMovie(resolve_path("spinner.gif"))
         self.__spinner_overlay.setMovie(self.__movie_spinner)
 
-    def __can_close(self) -> bool:
-        if self.acquisition_status in (
-            AcquisitionStatus.UNSTARTED,
-            AcquisitionStatus.FINISHED,
-        ):
-            return True
-
-        Error(
-            QtWidgets.QMessageBox.Icon.Warning,
-            self.scraper_translations["ACQUISITION_IS_RUNNING"],
-            self.scraper_translations["WAR_ACQUISITION_IS_RUNNING"],
-            "",
-        ).exec()
-        return False
-
     def __back_to_wizard(self):
-        if self.__can_close():
-            self.deleteLater()
-            self.__wizard.reload_case_info()
-            self.__wizard.show()
+        self.deleteLater()
+        self.__wizard.reload_case_info()
+        self.__wizard.show()
 
     def closeEvent(self, event):
         if self.__wizard is not None:
             event.ignore()
             self.__back_to_wizard()
-        elif self.__can_close():
-            event.accept()
         else:
-            event.ignore()
+            event.accept()
