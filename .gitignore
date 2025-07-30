@@ -178,4 +178,5 @@ pyrightconfig.json
 # Fit archive
 *.db
 .DS_Store
+FIT/
 

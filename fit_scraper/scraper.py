@@ -15,7 +15,7 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
-from fit_common.core.utils import get_version
+from fit_common.core import get_version
 from fit_common.gui.error import Error
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
