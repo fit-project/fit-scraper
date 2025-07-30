@@ -97,6 +97,10 @@ class Scraper(QtWidgets.QMainWindow):
         return self.__case_info
 
     @property
+    def tasks_info(self):
+        return self.__tasks_info
+
+    @property
     def acquisition_directory(self):
         return self.__acquisition_directory
 
