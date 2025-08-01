@@ -15,7 +15,6 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
-from fit_common.core import get_local_version
 from fit_common.gui.error import Error
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
@@ -277,9 +276,6 @@ class Scraper(QtWidgets.QMainWindow):
         self.__acquisition.status_bar_visible = visible
         self.__acquisition.reset_progress_bar
         self.__acquisition.reset_status_bar
-
-    def _get_version(self):
-        return get_local_version()
 
     def __init_execution_overlay(self):
 
