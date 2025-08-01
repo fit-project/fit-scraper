@@ -393,11 +393,11 @@ xhtml2pdf = "^0.2.17"
 type = "git"
 url = "https://github.com/fit-project/fit-acquisition.git"
 reference = "main"
-resolved_reference = "2a2a792aa7dab78fb49b81088d2fc8bb893440eb"
+resolved_reference = "c12e083113708ce1ad115bf7a1447d615455e2b3"
 
 [[package]]
 name = "fit-assets"
-version = "0.1.15"
+version = "0.1.17"
 description = "Assets (icons, images, resources) for the FIT project"
 optional = false
 python-versions = ">=3.9,<3.13"
@@ -412,7 +412,7 @@ PySide6 = "6.9.0"
 type = "git"
 url = "https://github.com/fit-project/fit-assets.git"
 reference = "main"
-resolved_reference = "7401955a08b66164f49342f9b53a54389c50b1c3"
+resolved_reference = "f824f97b0fb4b0d6b5b96e427a38d57d914b5b8b"
 
 [[package]]
 name = "fit-cases"
@@ -434,7 +434,7 @@ sqlalchemy = "^2.0.40"
 type = "git"
 url = "https://github.com/fit-project/fit-cases.git"
 reference = "main"
-resolved_reference = "c2e6f2871c5ead7c871c2ebf5d8109fd56f3bdc1"
+resolved_reference = "b4e398866b8ba5392c47495364e7dfb748e92fa6"
 
 [[package]]
 name = "fit-common"
@@ -457,7 +457,7 @@ windows-tools = {version = "^2.5.0", markers = "sys_platform == \"win32\""}
 type = "git"
 url = "https://github.com/fit-project/fit-common.git"
 reference = "main"
-resolved_reference = "906e57aecf623b15f8517c12a241059299c184e0"
+resolved_reference = "df42d1850fafd2026815c5a6190c4c1b18df267e"
 
 [[package]]
 name = "fit-configurations"
@@ -479,7 +479,7 @@ sqlalchemy = "^2.0.40"
 type = "git"
 url = "https://github.com/fit-project/fit-configurations.git"
 reference = "main"
-resolved_reference = "1c48e5ccce5e419196b847a53c26eeb96b7c78cc"
+resolved_reference = "351fcffd3d7d6749e24b65c2ffe018f84c16cb8a"
 
 [[package]]
 name = "greenlet"
