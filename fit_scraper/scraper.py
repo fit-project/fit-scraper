@@ -22,7 +22,6 @@ from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
 from fit_configurations.utils import show_configuration_dialog
 from PySide6 import QtCore, QtWidgets
-from PySide6.QtGui import QMovie
 
 from fit_scraper.lang import load_scraper_translations
 
@@ -270,7 +269,6 @@ class Scraper(QtWidgets.QMainWindow):
         self.finish_acquisition()
 
     def on_resize(self, event):
-        self.__spinner_overlay.setGeometry(self.rect())
         self.__tasks_info.setGeometry(self.rect())
         super().resizeEvent(event)
 
@@ -308,18 +306,6 @@ class Scraper(QtWidgets.QMainWindow):
         self.__tasks_info.setGeometry(self.rect())
         self.__tasks_info.hide()
         self.__tasks_info.raise_()
-
-        self.__spinner_overlay = QtWidgets.QLabel(self)
-        self.__spinner_overlay.setAlignment(QtCore.Qt.AlignCenter)
-        self.__spinner_overlay.setStyleSheet(
-            "background-color: rgba(255, 255, 255, 180);"
-        )
-
-        self.__spinner_overlay.setGeometry(self.rect())
-        self.__spinner_overlay.hide()
-
-        self.__movie_spinner = QMovie(":/images/images/spinner.gif")
-        self.__spinner_overlay.setMovie(self.__movie_spinner)
 
     def __can_close(self) -> bool:
         if self.acquisition_status in (
