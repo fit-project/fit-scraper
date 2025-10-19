@@ -10,12 +10,14 @@
 import os
 import re
 import stat
+from enum import Enum, auto
 
 from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
 from fit_common.gui.error import Error
+from fit_common.gui.spinner import Spinner
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
 from fit_configurations.utils import show_configuration_dialog
@@ -25,9 +27,21 @@ from PySide6.QtGui import QMovie
 from fit_scraper.lang import load_scraper_translations
 
 
+class FlowMode(Enum):
+    START_STOP_POST = auto()
+    START_POST = auto()
+
+
 class Scraper(QtWidgets.QMainWindow):
 
-    def __init__(self, logger, acquisition_type, packages, wizard=None):
+    def __init__(
+        self,
+        logger,
+        acquisition_type,
+        packages,
+        wizard=None,
+        flow_mode=FlowMode.START_STOP_POST,
+    ):
         super().__init__()
 
         self.__acquisition_status = AcquisitionStatus.UNSTARTED
@@ -38,6 +52,7 @@ class Scraper(QtWidgets.QMainWindow):
         self.__tasks_info = None
 
         self.__wizard = wizard
+        self.__flow_mode = flow_mode
 
         self.scraper_translations = load_scraper_translations()
 
@@ -66,6 +81,8 @@ class Scraper(QtWidgets.QMainWindow):
         self.__acquisition.post_acquisition_finished.connect(
             self.on_post_acquisition_finished
         )
+
+        self.__spinner = Spinner(self)
 
     @property
     def acquisition_status(self):
@@ -200,21 +217,25 @@ class Scraper(QtWidgets.QMainWindow):
         self._reset_acquisition_indicators(True)
         self.__acquisition.load_tasks()
         self.__init_execution_overlay()
-        self.__spinner_overlay.show()
-        self.__movie_spinner.start()
-        loop = QtCore.QEventLoop()
-        QtCore.QTimer.singleShot(1000, loop.quit)
-        loop.exec()
+        if self.__flow_mode == FlowMode.START_STOP_POST:
+            self.__spinner.start()
+            loop = QtCore.QEventLoop()
+            QtCore.QTimer.singleShot(1000, loop.quit)
+            loop.exec()
+        elif self.__flow_mode == FlowMode.START_POST:
+            self.__tasks_info.show()
         self.__acquisition.log_start_message()
         self.__acquisition.run_start_tasks()
 
     def on_start_tasks_finished(self):
-        loop = QtCore.QEventLoop()
-        self.__acquisition.set_completed_progress_bar()
-        QtCore.QTimer.singleShot(2000, loop.quit)
-        loop.exec()
-        self.__movie_spinner.stop()
-        self.__spinner_overlay.hide()
+        if self.__flow_mode == FlowMode.START_STOP_POST:
+            loop = QtCore.QEventLoop()
+            self.__acquisition.set_completed_progress_bar()
+            QtCore.QTimer.singleShot(2000, loop.quit)
+            loop.exec()
+            self.__spinner.stop()
+        elif self.__flow_mode == FlowMode.START_POST:
+            self.execute_post_acquisition_tasks_flow()
         self._reset_acquisition_indicators(False)
 
     def execute_stop_tasks_flow(self):
