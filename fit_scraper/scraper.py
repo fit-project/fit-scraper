@@ -81,8 +81,6 @@ class Scraper(QtWidgets.QMainWindow):
             self.on_post_acquisition_finished
         )
 
-        self.__spinner = Spinner(self)
-
     @property
     def acquisition_status(self):
         return self.__acquisition_status
@@ -306,6 +304,7 @@ class Scraper(QtWidgets.QMainWindow):
         self.__tasks_info.setGeometry(self.rect())
         self.__tasks_info.hide()
         self.__tasks_info.raise_()
+        self.__spinner = Spinner(parent=self)
 
     def __can_close(self) -> bool:
         if self.acquisition_status in (
