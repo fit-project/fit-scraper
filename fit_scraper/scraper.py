@@ -20,7 +20,7 @@ from fit_common.gui.spinner import Spinner
 from fit_common.gui.utils import show_finish_acquisition_dialog
 from fit_configurations.controller.tabs.general.general import GeneralController
 from fit_configurations.utils import show_configuration_dialog
-from PySide6 import QtCore, QtWidgets
+from PySide6 import QtCore, QtGui, QtWidgets
 
 from fit_scraper.lang import load_scraper_translations
 
@@ -219,11 +219,14 @@ class Scraper(QtWidgets.QMainWindow):
     def execute_stop_tasks_flow(self):
         self.__acquisition_status = AcquisitionStatus.STOPPED
         self._reset_acquisition_indicators(True)
+        if self.__spinner.state() == QtGui.QMovie.MovieState.Running:
+            self.__spinner.stop()
         self.__tasks_info.show()
         loop = QtCore.QEventLoop()
         QtCore.QTimer.singleShot(1000, loop.quit)
         loop.exec()
-        self.__acquisition.log_stop_message()
+        if len(self.__acquisition.start_tasks) > 0:
+            self.__acquisition.log_stop_message()
         self.__acquisition.run_stop_tasks()
 
     def on_stop_tasks_finished(self):
