@@ -213,7 +213,6 @@ class Scraper(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(2000, loop.quit)
         loop.exec()
         self.__spinner.stop()
-        self.execute_post_acquisition_tasks_flow()
         self._reset_acquisition_indicators(False)
 
     def execute_stop_tasks_flow(self):
