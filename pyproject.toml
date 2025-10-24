@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fit-scraper"
-version = "0.2.3"
+version = "1.0.0"
 description = "FIT Scraper Module"
 authors = ["FIT Project"]
 license = "LGPL-3.0-or-later"
@@ -9,7 +9,7 @@ packages = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.11,<3.13"
+python = ">=3.11,<3.14"
 PySide6 = "6.9.0"
 
 
