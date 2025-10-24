@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "fit-scraper"
-version = "0.2.3"
+version = "1.0.0"
 description = "FIT Scraper Module"
 authors = ["FIT Project"]
 license = "LGPL-3.0-or-later"
@@ -13,7 +13,7 @@ python = ">=3.11,<3.14"
 PySide6 = "6.9.0"
 
 
-fit-acquisition = {git = "https://github.com/fit-project/fit-acquisition.git", branch = "chore/update-python-compatibility-3.13"}
+fit-acquisition = {git = "https://github.com/fit-project/fit-acquisition.git", rev = "main"}
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
