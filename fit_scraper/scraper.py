@@ -23,6 +23,7 @@ from fit_configurations.utils import show_configuration_dialog
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from fit_scraper.lang import load_scraper_translations
+from fit_common.core import debug, get_context
 
 
 class Scraper(QtWidgets.QMainWindow):
@@ -109,18 +110,24 @@ class Scraper(QtWidgets.QMainWindow):
             cases_folder = os.path.expanduser(
                 GeneralController().configuration["cases_folder_path"]
             )
+            debug(f"ℹ️ cases_folder_path: {cases_folder}", context=get_context(self))
             if not os.path.exists(cases_folder):
                 os.makedirs(cases_folder)
                 os.chmod(cases_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 
             # Folder Case
             case_folder = os.path.join(cases_folder, self.__case_info["name"])
+            debug(f"ℹ️ case_folder: {case_folder}", context=get_context(self))
             if not os.path.exists(case_folder):
                 os.makedirs(case_folder)
                 os.chmod(case_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
 
             # Folder Type
             acquisition_type_folder = os.path.join(case_folder, self.__acquisition_type)
+            debug(
+                f"ℹ️ acquisition_type_folder: {acquisition_type_folder}",
+                context=get_context(self),
+            )
             if not os.path.exists(acquisition_type_folder):
                 os.makedirs(acquisition_type_folder)
                 os.chmod(
@@ -153,14 +160,22 @@ class Scraper(QtWidgets.QMainWindow):
                     default=0,
                 )
 
-                self.__acquisition_directory = os.path.join(
-                    acquisition_type_folder, f"acquisition_{index + 1}"
-                )
+            self.__acquisition_directory = os.path.join(
+                acquisition_type_folder, f"acquisition_{index + 1}"
+            )
 
+            debug(
+                f"ℹ️ self.__acquisition_directory: {self.__acquisition_directory}",
+                context=get_context(self),
+            )
             os.makedirs(self.__acquisition_directory, exist_ok=True)
             return True
 
         except Exception as e:
+            debug(
+                f"❌ An error occurred while creating the acquisition directory: {e}",
+                context=get_context(self),
+            )
             error = Error(
                 QtWidgets.QMessageBox.Icon.Critical,
                 self.scraper_translations["CREATE_DIRECTORY_ERROR_TITLE"],
