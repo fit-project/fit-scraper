@@ -138,6 +138,7 @@ class Scraper(QtWidgets.QMainWindow):
                 acquisition_type_folder, "acquisition_1"
             )
 
+            index = 0
             if os.path.isdir(self.__acquisition_directory):
                 acquisition_directories = [
                     d
