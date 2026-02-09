@@ -15,6 +15,7 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
+from fit_common.core import debug, get_context
 from fit_common.gui.error import Error
 from fit_common.gui.spinner import Spinner
 from fit_common.gui.utils import show_finish_acquisition_dialog
@@ -22,8 +23,7 @@ from fit_configurations.controller.tabs.general.general import GeneralController
 from fit_configurations.utils import show_configuration_dialog
 from PySide6 import QtCore, QtGui, QtWidgets
 
-from fit_scraper.lang import load_scraper_translations
-from fit_common.core import debug, get_context
+from fit_scraper.lang import load_translations as load_scraper_translations
 
 
 class Scraper(QtWidgets.QMainWindow):
