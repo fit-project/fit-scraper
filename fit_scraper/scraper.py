@@ -221,6 +221,7 @@ class Scraper(QtWidgets.QMainWindow):
         QtCore.QTimer.singleShot(1000, loop.quit)
         loop.exec()
         self.__acquisition.log_start_message()
+        self.__acquisition.write_fit_system_environment_variables()
         self.__acquisition.run_start_tasks()
 
     def on_start_tasks_finished(self):
