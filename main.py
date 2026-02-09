@@ -12,6 +12,8 @@ import os
 import sys
 
 from fit_acquisition.class_names import class_names
+from fit_acquisition.logger_names import LoggerName
+from fit_common.core import AcquisitionType, debug
 from PySide6 import QtCore, QtWidgets
 from PySide6.QtWidgets import QApplication
 
@@ -20,9 +22,9 @@ from fit_scraper.scraper import Scraper
 
 class TestScraper(Scraper):
     def __init__(self, wizard=None):
-        logger = logging.getLogger("view.scrapers.web.web")
+        logger = logging.getLogger(LoggerName.SCRAPER_WEB.value)
         packages = []
-        super().__init__(logger, "web", packages, wizard)
+        super().__init__(logger, AcquisitionType.WEB, packages, wizard)
 
         self.acquisition.start_tasks = [
             class_names.SCREENRECORDER,
@@ -95,15 +97,24 @@ class TestScraper(Scraper):
         return super().execute_stop_tasks_flow()
 
     def on_start_tasks_finished(self):
-        print("finito di eseguire tutti i task della lista di Acquisition start_tasks")
+        debug(
+            "ℹ️ finito di eseguire tutti i task della lista di Acquisition start_tasks",
+            context="main.fit_scraper",
+        )
         return super().on_start_tasks_finished()
 
     def on_stop_tasks_finished(self):
         self.acquisition.start_post_acquisition()
-        print("finito di eseguire tutti i task della lista di Acquisition  stop_tasks")
+        debug(
+            "ℹ️ finito di eseguire tutti i task della lista di Acquisition  stop_tasks",
+            context="main.fit_scraper",
+        )
 
     def on_post_acquisition_finished(self):
-        print("finito di eseguire tutti i task della lista di Acquisition post_tasks")
+        debug(
+            "ℹ️ finito di eseguire tutti i task della lista di Acquisition post_tasks",
+            context="main.fit_scraper",
+        )
         return super().on_post_acquisition_finished()
 
 
@@ -115,7 +126,10 @@ def main():
         window.show()
         sys.exit(app.exec())
     else:
-        print("Utente ha annullato il form del caso. Niente da mostrare.")
+        debug(
+            "❌ User cancelled the case form. Nothing to display.",
+            context="main.fit_scraper",
+        )
         sys.exit(0)
 
 
