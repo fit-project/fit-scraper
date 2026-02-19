@@ -104,6 +104,13 @@ class Scraper(QtWidgets.QMainWindow):
     def acquisition_directory(self):
         return self.__acquisition_directory
 
+    @property
+    def wizard(self):
+        return self.__wizard
+
+    def can_close(self):
+        return self.__can_close()
+
     def create_acquisition_directory(self) -> bool:
         try:
             # Folder Cases
