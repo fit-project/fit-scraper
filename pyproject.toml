@@ -27,3 +27,18 @@ markers = [
     "integration: integration tests",
     "e2e: end-to-end tests",
 ]
+
+[tool.mypy]
+python_version = "3.11"
+explicit_package_bases = true
+files = ["fit_scraper", "main.py"]
+
+[[tool.mypy.overrides]]
+module = [
+    "fit_acquisition.*",
+    "fit_cases.*",
+    "fit_common.*",
+    "fit_configurations.*",
+    "PySide6.*",
+]
+ignore_missing_imports = true

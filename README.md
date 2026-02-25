@@ -58,14 +58,14 @@ pytest -m e2e -q tests
 
 ### 3) Quality and security checks
 ```bash
-ruff check fit_acquisition tests
-mypy fit_acquisition
-bandit -c pyproject.toml -r fit_acquisition -q -ll -ii
+ruff check fit_scraper tests
+mypy fit_scraper
+bandit -c pyproject.toml -r fit_scraper -q -ll -ii
 PIPAPI_PYTHON_LOCATION="$(python -c 'import sys; print(sys.executable)')" \
   python -m pip_audit --progress-spinner off
 ```
 
-Note: `pip-audit` may print a skip message for `fit-acquisition`, `fit-assets`, `fit-cases`, `fit-common` and `fit-configurations` because they are a local packages and not published on PyPI.
+Note: `pip-audit` may print a skip message for `fit-acquisition`, `fit-assets`, `fit-cases`, `fit-common`, `fit-configurations` and `fit-scraper` because they are a local packages and not published on PyPI.
 
 ---
 
