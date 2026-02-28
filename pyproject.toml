@@ -13,7 +13,7 @@ python = ">=3.11,<3.14"
 PySide6 = "6.9.0"
 
 
-fit-acquisition = {git = "https://github.com/fit-project/fit-acquisition.git", tag = "v1.0.0-rc1"}
+fit-acquisition = {git = "https://github.com/fit-project/fit-acquisition.git", branch = "main"}
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
@@ -21,11 +21,13 @@ build-backend = "poetry.core.masonry.api"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "--strict-markers"
+pythonpath = ["."]
 markers = [
-    "unit: fast unit tests",
-    "contract: contract tests",
-    "integration: integration tests",
-    "e2e: end-to-end tests",
+    "unit: fast isolated tests",
+    "contract: cross-module contract tests for public interfaces and integrations",
+    "integration: integration tests with real external resources and dependencies",
+    "e2e: end-to-end UI workflow tests",
 ]
 
 [tool.mypy]
