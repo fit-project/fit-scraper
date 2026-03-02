@@ -10,6 +10,8 @@
 import os
 import re
 import stat
+import grp
+import pwd
 
 from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
@@ -111,6 +113,19 @@ class Scraper(QtWidgets.QMainWindow):
     def can_close(self):
         return self.__can_close()
 
+    def _relax_directory_permissions(self, path: str) -> None:
+        os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+        if os.geteuid() != 0:
+            return
+
+        owner = os.environ.get("SUDO_USER")
+        if not owner:
+            return
+
+        user_info = pwd.getpwnam(owner)
+        group_info = grp.getgrgid(user_info.pw_gid)
+        os.chown(path, user_info.pw_uid, group_info.gr_gid)
+
     def create_acquisition_directory(self) -> bool:
         try:
             # Folder Cases
@@ -120,14 +135,14 @@ class Scraper(QtWidgets.QMainWindow):
             debug(f"ℹ️ cases_folder_path: {cases_folder}", context=get_context(self))
             if not os.path.exists(cases_folder):
                 os.makedirs(cases_folder)
-                os.chmod(cases_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+            self._relax_directory_permissions(cases_folder)
 
             # Folder Case
             case_folder = os.path.join(cases_folder, self.__case_info["name"])
             debug(f"ℹ️ case_folder: {case_folder}", context=get_context(self))
             if not os.path.exists(case_folder):
                 os.makedirs(case_folder)
-                os.chmod(case_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+            self._relax_directory_permissions(case_folder)
 
             # Folder Type
             acquisition_type_folder = os.path.join(case_folder, self.__acquisition_type)
@@ -137,9 +152,7 @@ class Scraper(QtWidgets.QMainWindow):
             )
             if not os.path.exists(acquisition_type_folder):
                 os.makedirs(acquisition_type_folder)
-                os.chmod(
-                    acquisition_type_folder, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO
-                )
+            self._relax_directory_permissions(acquisition_type_folder)
 
             self.__acquisition_directory = os.path.join(
                 acquisition_type_folder, "acquisition_1"
@@ -177,6 +190,7 @@ class Scraper(QtWidgets.QMainWindow):
                 context=get_context(self),
             )
             os.makedirs(self.__acquisition_directory, exist_ok=True)
+            self._relax_directory_permissions(self.__acquisition_directory)
             return True
 
         except Exception as e:
@@ -203,7 +217,7 @@ class Scraper(QtWidgets.QMainWindow):
 
             full_path = os.path.join(self.__acquisition_directory, sub_path)
             os.makedirs(full_path, exist_ok=True)
-            os.chmod(full_path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
+            self._relax_directory_permissions(full_path)
             return True
 
         except Exception as e:
