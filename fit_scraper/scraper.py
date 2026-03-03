@@ -49,7 +49,10 @@ class Scraper(QtWidgets.QMainWindow):
         else:
             dialog = CaseFormDialog()
             dialog.ui.save_button.setText("Start")
-            result = dialog.exec()
+            try:
+                result = dialog.exec()
+            finally:
+                self._dispose_dialog(dialog)
             if result == QtWidgets.QDialog.Accepted:
                 self.__case_info = dialog.get_case_info()
             else:
@@ -59,7 +62,10 @@ class Scraper(QtWidgets.QMainWindow):
                     self.scraper_translations["NO_CASE_SELECTED_MESSAGE"],
                     "",
                 )
-                error_dlg.exec()
+                try:
+                    error_dlg.exec()
+                finally:
+                    self._dispose_dialog(error_dlg)
                 self.__has_valid_case = False
                 return
 
@@ -314,6 +320,15 @@ class Scraper(QtWidgets.QMainWindow):
         self.__acquisition.status_bar_visible = visible
         self.__acquisition.reset_progress_bar
         self.__acquisition.reset_status_bar
+
+    @staticmethod
+    def _dispose_dialog(dialog):
+        if dialog is None:
+            return
+        dialog.deleteLater()
+        app = QtWidgets.QApplication.instance()
+        if app is not None:
+            app.processEvents()
 
     def __init_execution_overlay(self):
 
