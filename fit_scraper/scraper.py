@@ -12,6 +12,7 @@ import re
 import stat
 import grp
 import pwd
+from typing import Any
 
 from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
@@ -37,9 +38,9 @@ class Scraper(QtWidgets.QMainWindow):
         self.__acquisition_status = AcquisitionStatus.UNSTARTED
         self.__acquisition_type = acquisition_type
         self.__has_valid_case = True
-        self.__case_info = None
-        self.__acquisition_directory = None
-        self.__tasks_info = None
+        self.__case_info: dict[str, Any] | None = None
+        self.__acquisition_directory: str | None = None
+        self.__tasks_info: TasksInfo | None = None
 
         self.__wizard = wizard
 
@@ -54,7 +55,7 @@ class Scraper(QtWidgets.QMainWindow):
                 result = dialog.exec()
             finally:
                 self._dispose_dialog(dialog)
-            if result == QtWidgets.QDialog.Accepted:
+            if result == QtWidgets.QDialog.DialogCode.Accepted:
                 self.__case_info = dialog.get_case_info()
             else:
                 error_dlg = Error(
@@ -135,6 +136,12 @@ class Scraper(QtWidgets.QMainWindow):
 
     def create_acquisition_directory(self) -> bool:
         try:
+            case_info = self.__case_info
+            if case_info is None:
+                raise ValueError(
+                    self.scraper_translations["NO_CASE_SELECTED_MESSAGE"]
+                )
+
             # Folder Cases
             cases_folder = os.path.expanduser(
                 GeneralController().configuration["cases_folder_path"]
@@ -145,7 +152,7 @@ class Scraper(QtWidgets.QMainWindow):
             self._relax_directory_permissions(cases_folder)
 
             # Folder Case
-            case_folder = os.path.join(cases_folder, self.__case_info["name"])
+            case_folder = os.path.join(cases_folder, str(case_info["name"]))
             debug(f"ℹ️ case_folder: {case_folder}", context=get_context(self))
             if not os.path.exists(case_folder):
                 os.makedirs(case_folder)
@@ -161,12 +168,12 @@ class Scraper(QtWidgets.QMainWindow):
                 os.makedirs(acquisition_type_folder)
             self._relax_directory_permissions(acquisition_type_folder)
 
-            self.__acquisition_directory = os.path.join(
+            acquisition_directory = os.path.join(
                 acquisition_type_folder, "acquisition_1"
             )
 
             index = 0
-            if os.path.isdir(self.__acquisition_directory):
+            if os.path.isdir(acquisition_directory):
                 acquisition_directories = [
                     d
                     for d in os.listdir(acquisition_type_folder)
@@ -188,16 +195,17 @@ class Scraper(QtWidgets.QMainWindow):
                     default=0,
                 )
 
-            self.__acquisition_directory = os.path.join(
+            acquisition_directory = os.path.join(
                 acquisition_type_folder, f"acquisition_{index + 1}"
             )
+            self.__acquisition_directory = acquisition_directory
 
             debug(
                 f"ℹ️ self.__acquisition_directory: {self.__acquisition_directory}",
                 context=get_context(self),
             )
-            os.makedirs(self.__acquisition_directory, exist_ok=True)
-            self._relax_directory_permissions(self.__acquisition_directory)
+            os.makedirs(acquisition_directory, exist_ok=True)
+            self._relax_directory_permissions(acquisition_directory)
             return True
 
         except Exception as e:

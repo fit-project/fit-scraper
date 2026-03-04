@@ -403,7 +403,7 @@ def test_wrapper_dialog_methods_delegate(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     scraper, _wizard = scraper_with_fakes
-    record = {"finish": None, "config": 0, "case_info": None}
+    record = {"finish": None, "config": None, "case_info": None}
     scraper._Scraper__acquisition_directory = "/tmp/case/acquisition_1"
 
     monkeypatch.setattr(
@@ -414,7 +414,7 @@ def test_wrapper_dialog_methods_delegate(
     monkeypatch.setattr(
         scraper_module,
         "show_configuration_dialog",
-        lambda: record.__setitem__("config", record["config"] + 1),
+        lambda acquisition_type: record.__setitem__("config", acquisition_type),
     )
     monkeypatch.setattr(
         scraper_module,
@@ -427,7 +427,7 @@ def test_wrapper_dialog_methods_delegate(
     scraper.show_case_info()
 
     assert record["finish"] == "/tmp/case/acquisition_1"
-    assert record["config"] == 1
+    assert record["config"] == "web"
     assert record["case_info"] == {"name": "Case 1"}
 
 
