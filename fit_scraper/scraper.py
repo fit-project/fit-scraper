@@ -17,7 +17,7 @@ from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
 from fit_cases.utils import show_case_info_dialog
 from fit_cases.view.case_form_dialog import CaseFormDialog
-from fit_common.core import debug, get_context
+from fit_common.core import debug, get_context, AcquisitionType
 from fit_common.gui.error import Error
 from fit_common.gui.spinner import Spinner
 from fit_common.gui.utils import show_finish_acquisition_dialog
@@ -26,11 +26,12 @@ from fit_configurations.utils import show_configuration_dialog
 from PySide6 import QtCore, QtGui, QtWidgets
 
 from fit_scraper.lang import load_translations as load_scraper_translations
+from logging import Logger
 
 
 class Scraper(QtWidgets.QMainWindow):
 
-    def __init__(self, logger, acquisition_type, packages, wizard=None):
+    def __init__(self, logger: Logger, acquisition_type: AcquisitionType, packages: list[str], wizard=None):
         super().__init__()
 
         self.__acquisition_status = AcquisitionStatus.UNSTARTED
@@ -301,7 +302,7 @@ class Scraper(QtWidgets.QMainWindow):
         show_finish_acquisition_dialog(self.__acquisition_directory)
 
     def configuration_dialog(self):
-        show_configuration_dialog()
+        show_configuration_dialog(self.__acquisition_type)
 
     def show_case_info(self):
         show_case_info_dialog(self.__case_info)
