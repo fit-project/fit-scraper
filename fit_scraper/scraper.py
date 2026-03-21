@@ -16,7 +16,7 @@ from typing import Any
 
 from fit_acquisition.acquisition import Acquisition, AcquisitionStatus
 from fit_acquisition.tasks.tasks_info import TasksInfo
-from fit_cases.utils import show_case_info_dialog
+from fit_cases.utils import show_case_info_dialog, get_current_case_info
 from fit_cases.view.case_form_dialog import CaseFormDialog
 from fit_common.core import debug, get_context, AcquisitionType
 from fit_common.gui.error import Error
@@ -314,6 +314,9 @@ class Scraper(QtWidgets.QMainWindow):
 
     def show_case_info(self):
         show_case_info_dialog(self.__case_info)
+        case_info = get_current_case_info(self.__case_info)
+        if case_info is not None:
+            self.__case_info = case_info
 
     def mousePressEvent(self, event):
         self.dragPos = event.globalPosition().toPoint()
